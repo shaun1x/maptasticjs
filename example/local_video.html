@@ -1,0 +1,89 @@
+<html>
+
+<head>
+
+
+
+<style>
+
+body{
+	margin:0;
+	padding:0;
+	background:black;
+	color:white;
+}
+
+</style>
+</head>
+
+<body>
+	<pre id="controls" style="width:600px; height:250px; background:#404040">
+'E': Toggle edit mode
+
+In Edit Mode
+
+click / drag:       select and move quads/corner points
+SHIFT + drag:       move selcted quad/corner point with 10x precision
+ALT + drag:         rotate/scale selected quad
+Arrow keys:         move selected quad/corner point
+SHIFT + Arrow keys: move selected quad/corner point by 10 pixels
+ALT + Arrow keys:   rotate/scale selected quad
+'s':                Solo/unsolo selected quad
+'c':                Toggle mouse cursor crosshairs
+'r':                Rotate selected layer 90 degrees clock-wise
+'h':                Flip selected layer horizontally
+'v':                Flip selected layer vertically
+'b':                Show/Hide projector bounds
+<div id="message"></div>
+<input type="file" accept="video/*"/>	
+	</pre>
+	
+<script>
+ window.onload=function(){
+(function localFileVideoPlayer() {
+	'use strict'
+  var URL = window.URL || window.webkitURL
+  var displayMessage = function (message, isError) {
+    var element = document.querySelector('#message')
+    element.innerHTML = message
+    element.className = isError ? 'error' : 'info'
+  }
+  var playSelectedFile = function (event) {
+    var file = this.files[0]
+    var type = file.type
+    var videoNode = document.querySelector('video')
+    var canPlay = videoNode.canPlayType(type)
+    if (canPlay === '') canPlay = 'no'
+    var message = 'Can play type "' + type + '": ' + canPlay
+    var isError = canPlay === 'no'
+    displayMessage(message, isError)
+
+    if (isError) {
+      return
+    }
+
+    var fileURL = URL.createObjectURL(file)
+    videoNode.src = fileURL
+  }
+  var inputNode = document.querySelector('input')
+  inputNode.addEventListener('change', playSelectedFile, false)
+})()
+}
+</script>
+
+
+
+
+
+<video autoplay loop id="video-test" style="width:320px; height:240px; object-fit:fill"></video>
+
+	
+	
+	<script src="../build/maptastic2.js"></script>
+	<script>
+		Maptastic("video-test", "controls");
+	</script>
+	
+</body>
+
+</html>
